@@ -16,6 +16,8 @@ def P(var, value, evidence={}):
         row = evidence[var.parents[0]]
     else:
         # multiple parents
+        print(var.parents)
+        print(evidence)
         row = tuple(evidence[parent] for parent in var.parents)
     return var.cpt[row] if value else 1-var.cpt[row]
 
@@ -95,7 +97,10 @@ class BayesNet:
 
 def normalize(prob_distr):
     '''This is here to help'''
+
     total = sum(prob_distr)
+
+    print("\n\n\n")
     if total != 0:
         return map(lambda a: a / total, prob_distr)
     else:
@@ -106,27 +111,46 @@ def get_prob(Q, e, bn):
      e.g. P(Q|e). You may want to make helper functions here!'''
 
     """Your Code Goes here"""
+    import numpy as np
     #kafka to containers
     if Q not in bn.node_list:
         return
 
 
-    prob_dist = []
-    marginal_p = []
-    for value in Q.values:
-        marginal_p.append(value)
-    from time import sleep
+    returned_probs = []
+    #For every value that Q could be. (if bool:{True, False})
+    if len(Q.parents) < 1:
+        temp = [Q.cpt[()], 1-Q.cpt[()]]
+        return temp
+    if not e:
+        pos = []
+        neg = []
 
-    if e:
-        for value in marginal_p:
-            prob_dist.append(P(Q, value, e))
 
-        return prob_dist
+        for i,val in enumerate(Q.cpt):
+            pos.append(Q.cpt[val])
+            neg.append(1-Q.cpt[val])
 
-    else:
-        val = Q.cpt
-        return [val, 1-val]
 
+        returned_probs += [np.mean(pos), np.mean(neg)]
+        returned_probs = list(normalize(returned_probs))
+
+        return returned_probs
+
+    pos = []
+    neg = []
+    for bool_val in Q.values:
+        print(Q.cpt)
+        for i,vals_we_want in enumerate(Q.cpt):
+            print(vals_we_want)
+
+
+        returned_probs.append(P(Q,bool_val, e))
+    return returned_probs
+
+
+
+    return
 
 
 def make_Prediction(Q,e, bn):

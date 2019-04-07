@@ -82,6 +82,7 @@ class Tests_Q2(unittest.TestCase):
 
     def test_evidence_2(self):
         x = get_prob(HBP,{"HD":T,"FH":T},BN)
+        print("okokokokokokokokok")
         self.assertEqual(round(x[0],3), round(0.570056292379206,3))
 
 class Tests_Q3(unittest.TestCase):
@@ -167,7 +168,7 @@ tests_q4.addTest(Tests_Q4("test_Parents"))
 
 #Actually run the tests. If you want to only test certain things you
 #can comment out here
-# 
+#
 # print("**** Question 1 ****")
 # unittest.TextTestRunner().run(tests_q1)
 
